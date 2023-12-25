@@ -1,4 +1,5 @@
 import turtle
+import pandas
 
 screen = turtle.Screen()
 screen.title("U.S. States Game")
@@ -10,4 +11,19 @@ turtle.shape(image)
 answer_state = screen.textinput(
     title="Guess the State", prompt="What's another state's name?"
 )
-print(answer_state)
+
+data = pandas.read_csv("50_states.csv")
+
+
+row = data[data.state == answer_state.capitalize()]
+
+if row.empty:
+    print("Not in list")
+else:
+    t = turtle.Turtle()
+    t.hideturtle()
+    t.penup()
+    t.goto(row.x.item(), row.y.item())
+    t.write(row.state.item())
+
+screen.exitonclick()
