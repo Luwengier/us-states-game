@@ -7,23 +7,30 @@ image = "blank_states_img.gif"
 screen.addshape(image)
 turtle.shape(image)
 
-
-answer_state = screen.textinput(
-    title="Guess the State", prompt="What's another state's name?"
-)
-
-data = pandas.read_csv("50_states.csv")
+guessed_states = []
 
 
-row = data[data.state == answer_state.capitalize()]
+while len(guessed_states) < 50:
+    answer_state = screen.textinput(
+        title=f"{len(guessed_states)}/50 States Correct",
+        prompt="What's another state's name?",
+    ).title()
 
-if row.empty:
-    print("Not in list")
-else:
-    t = turtle.Turtle()
-    t.hideturtle()
-    t.penup()
-    t.goto(row.x.item(), row.y.item())
-    t.write(row.state.item())
+    print(answer_state)
 
-screen.exitonclick()
+    data = pandas.read_csv("50_states.csv")
+    row = data[data.state == answer_state]
+
+    if answer_state == "Exit":
+        break
+    if row.empty:
+        print("Not in list")
+    elif answer_state in guessed_states:
+        print("Already guessed")
+    else:
+        guessed_states.append(answer_state)
+        t = turtle.Turtle()
+        t.hideturtle()
+        t.penup()
+        t.goto(row.x.item(), row.y.item())
+        t.write(answer_state)
